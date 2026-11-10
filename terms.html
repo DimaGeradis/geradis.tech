@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-light="day">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Terms of use of Geradis.">
+  <meta name="robots" content="noindex">
+  <title>Terms — Geradis</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preload" as="image" href="assets/img/wall-day.webp">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <div class="scene" aria-hidden="true">
+    <img class="scene__wall" src="assets/img/wall-day.webp" alt="" width="1344" height="768" decoding="async">
+    <div class="scene__tint"></div>
+    <div class="scene__glow"></div>
+    <div class="scene__shade"></div>
+  </div>
+
+  <div class="page">
+    <header class="site-header">
+      <nav aria-label="Main navigation">
+        <a class="nav-link" href="index.html"><span>Home</span></a>
+        <a class="nav-link" href="mailto:contact@geradis.ai"><span>Contact</span></a>
+      </nav>
+    </header>
+
+    <main class="hero legal">
+      <h1 class="legal__title">Terms</h1>
+      <div class="legal__body">
+        <p>This is a placeholder terms of use page. Replace this text with the real terms for Geradis before going live.</p>
+        <p>Until then: the site is provided “as is”, without warranties of any kind. Content and design are owned by their respective authors.</p>
+        <p>Questions? Write to <a href="mailto:contact@geradis.ai">contact@geradis.ai</a>.</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>© <span id="year">2026</span> Geradis</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="footer-link" href="index.html">Home</a>
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="footer-link" href="privacy.html">Privacy</a>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.documentElement.setAttribute("data-light", "day");
+    window.addEventListener("load", function () {
+      document.body.classList.add("is-ready");
+    });
+  </script>
+</body>
+</html>
