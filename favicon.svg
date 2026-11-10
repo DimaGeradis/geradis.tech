@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="11" y="9" width="43" height="47" rx="3.5" fill="#fffefd" transform="rotate(2 32 32)"/>
+  <rect x="11" y="9" width="43" height="47" rx="3.5" fill="none" stroke="#d8d2c4" stroke-width="1" transform="rotate(2 32 32)"/>
+  <rect x="25" y="2.5" width="15" height="11" rx="1.5" fill="#6992e7" opacity="0.72" transform="rotate(6 32.5 8)"/>
+  <text x="32" y="44" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="27" font-weight="700" fill="#2e2a33" text-anchor="middle" transform="rotate(2 32 32)">G</text>
+  <text x="42" y="51" font-family="'Segoe Print','Bradley Hand','Comic Sans MS',cursive" font-size="11" fill="#2e2a33" text-anchor="middle" transform="rotate(2 32 32)">:)</text>
+</svg>
