@@ -1,81 +1,81 @@
-# Geradis — landing page
+# Geradis — главная страница
 
-Статический лендинг (чистый HTML + CSS + JS, без сборки), готовый к публикации
-на **GitHub Pages**. Название бренда: **Geradis**.
+Статическая копия главной страницы в стиле минималистичного лендинга: записка,
+приклеенная скотчем к стене, и футер с соцсетями.
+
+Полностью автономная страница: без сборки, без внешних CDN — все шрифты и
+изображения лежат в `assets/`.
 
 ## Структура
 
 ```
-geradis-site/
-├── index.html            — главная страница
-├── privacy.html          — заглушка политики конфиденциальности
-├── terms.html            — заглушка условий использования
-├── .nojekyll             — отключает обработку Jekyll на GitHub Pages
-├── README.md
+├── index.html            # страница (весь CSS и JS внутри)
+├── favicon.ico           # иконка сайта
+├── .nojekyll             # отключает Jekyll на GitHub Pages
+├── README.md             # этот файл
 └── assets/
-    ├── css/style.css     — все стили (включая 4 режима освещения)
-    ├── js/main.js        — переключатель света, анимация появления
-    └── img/
-        ├── wall-day.webp — фоновое фото стены (сгенерировано ИИ)
-        ├── og.png        — картинка для превью в соцсетях (Open Graph)
-        └── favicon.svg   — фавиконка
+    ├── fonts/            # DM Sans, Libre Baskerville, Caveat (woff2)
+    └── img/              # стена, бумага, скотч, иконки, og-image
 ```
 
-## Как опубликовать на GitHub Pages
+## Публикация на GitHub Pages
 
-### Вариант 1. Через веб-интерфейс (без git в терминале)
+### Вариант 1 — репозиторий `username.github.io` (сайт на корневом домене)
 
-1. Создайте новый репозиторий на GitHub, например `geradis-site`
-   (или `<username>.github.io`, если это будет сайт целиком).
-2. Нажмите **uploading an existing file**, перетащите **всё содержимое**
-   папки `geradis-site` (не саму папку, а файлы внутри: `index.html`,
-   `assets/` и т.д.) и сделайте коммит.
-3. Откройте **Settings → Pages**.
-4. В блоке **Build and deployment** выберите:
-   - Source: **Deploy from a branch**
-   - Branch: **main**, папка: **/(root)**
-5. Нажмите **Save** и подождите 1–2 минуты.
-6. Сайт будет доступен по адресу `https://<username>.github.io/<репозиторий>/`.
+1. Создайте репозиторий с именем `<ваш-логин>.github.io`.
+2. Загрузите все файлы из этой папки в корень репозитория
+   (без вложенной папки — `index.html` должен лежать в корне).
+3. Откройте `Settings → Pages` и убедитесь, что Source: `Deploy from a branch`,
+   ветка `main`, папка `/ (root)`.
+4. Через 1–2 минуты сайт будет доступен по адресу
+   `https://<ваш-логин>.github.io/`.
 
-### Вариант 2. Через git из терминала
+### Вариант 2 — отдельный репозиторий (сайт в подпапке)
+
+1. Создайте репозиторий, например `geradis`.
+2. Загрузите файлы в корень репозитория.
+3. `Settings → Pages` → Source: `Deploy from a branch`, ветка `main`, `/ (root)`.
+4. Сайт появится по адресу `https://<ваш-логин>.github.io/geradis/`.
+
+Все пути в странице относительные (`assets/...`), поэтому она работает и в
+подпапке, и на корневом домене.
+
+### Загрузка через командную строку
 
 ```bash
-cd geradis-site
-git init
+git init -b main
 git add .
-git commit -m "Geradis landing page"
-git branch -M main
-git remote add origin https://github.com/<username>/<repo>.git
+git commit -m "geradis landing page"
+git remote add origin https://github.com/<ваш-логин>/<репозиторий>.git
 git push -u origin main
-# затем: Settings → Pages → Deploy from a branch → main / (root)
 ```
-
-## Что стоит поменять перед публикацией
-
-- **Ссылки-заглушки `#`** в `index.html`: пункты меню Products и Research,
-  строка «New: …» и ссылки соцсетей (X, LinkedIn, Discord, GitHub).
-- **Email** `contact@geradis.ai` — если домен другой, замените в
-  `index.html`, `privacy.html`, `terms.html` и в `assets/js/main.js`.
-- **Канонический URL и og:url** — в `index.html` есть закомментированные
-  мета-теги с плейсхолдером `<username>`; раскомментируйте и подставьте
-  свой адрес (для корректного превью в соцсетях `og:image` тоже лучше
-  указать абсолютным URL).
-- **Privacy и Terms** — сейчас это заглушки, замените текст на реальный.
 
 ## Локальный просмотр
 
-Просто откройте `index.html` в браузере, либо:
-
 ```bash
 python3 -m http.server 8000
-# и откройте http://localhost:8000
+# открыть http://localhost:8000
 ```
 
-## Примечания
+Или просто откройте `index.html` в браузере — сборка не требуется.
 
-- Шрифты (DM Sans, Libre Baskerville, Caveat) подключены с Google Fonts —
-  нужны интернет-соединение при первом заходе.
-- Фоновое фото стены сгенерировано ИИ; режимы освещения
-  (Dawn / Daylight / Golden hour / Moonlight) сделаны CSS-слоями
-  поверх фото, переключатель — в углу страницы.
-- При `prefers-reduced-motion` анимации отключаются.
+## Что и где менять
+
+| Что | Где в `index.html` |
+| --- | --- |
+| Email на стикере и ссылка Contact | блок `.note-text`, ссылка `mailto:` в `<nav>` |
+| Заголовок вкладки и описание | `<title>`, `<meta name="description">`, og-/twitter-теги |
+| Основной текст (2 абзаца) | блок `<div class="intro">` |
+| Строка «New: …» | `<p class="new-line">` (сейчас ссылка-заглушка `#`) |
+| Ссылки на соцсети (X, LinkedIn, Discord, GitHub) | блок `.social` — замените `href="#"` на свои профили |
+| Privacy / Terms | последние ссылки в футере — создайте страницы или уберите ссылки |
+| Текст в консоли разработчика (easter egg) | вызов `console.log` в конце `<script>` |
+
+## Особенности
+
+- Единый световой режим Daylight: мягкий дневной свет на стене.
+- Плавное проявление стены при загрузке и медленный «дыхательный» дрейф
+  камеры; отключаются при `prefers-reduced-motion`.
+- Все шрифты самодостаточные (woff2, `font-display: swap`) — страница не
+  зависит от Google Fonts и работает офлайн.
+- Скрытое сообщение в консоли браузера (F12 → Console).
