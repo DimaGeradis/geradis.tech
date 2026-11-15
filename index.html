@@ -120,7 +120,7 @@
     .napkin {
       position: relative;
       display: block;
-      width: clamp(205.6px, 16.8vw, 281.8px);
+      width: clamp(267.3px, 21.8vw, 366.3px);
       aspect-ratio: 1;
       margin: 0 0 clamp(48px, 7.5vh, 80px) 12px;
       padding: 0;
@@ -238,7 +238,7 @@
         margin-right: max(26px, env(safe-area-inset-right));
       }
       main { padding: 128px 0; }
-      .napkin { width: 205.6px; margin-left: 5px; margin-bottom: 52px; }
+      .napkin { width: 267.3px; margin-left: 5px; margin-bottom: 52px; }
       .napkin-tooltip { padding: 8px 12px; }
     }
     @media (min-width: 640px) {
@@ -375,15 +375,19 @@
           varying float vHeight;
 
           float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float vnoise(vec2 p) {
+            vec2 i = floor(p), f = fract(p);
+            vec2 q = f * f * (3.0 - 2.0 * f);
+            return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), q.x),
+                       mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), q.x), q.y);
+          }
 
           void main() {
             vec3 base = vec3(0.972, 0.966, 0.952);
-            // тканое плетение: нити основы и утка (частота ~ 1.5px на экране)
-            float w1 = sin(vUv.x * 850.0);
-            float w2 = sin(vUv.y * 850.0);
-            base *= 0.955 + 0.024 * w1 * w2 + 0.010 * (w1 + w2);
-            // ворс
-            base -= hash(floor(vUv * 780.0)) * 0.030;
+            // плотная бумага: плавные разводы волокон — сглаженный шум без сетки
+            // (высокочастотные «нити» sin(850) алиасили и выглядели как тюль)
+            base *= 0.982 + 0.020 * vnoise(vUv * 6.5) + 0.013 * vnoise(vUv * 16.0 + 37.2);
+            base -= 0.008 * vnoise(vUv * 90.0 + 11.3);
             // подшитый край с одной строчкой
             float ed = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
             base *= 1.0 - 0.07 * smoothstep(0.0022, 0.0008, abs(ed - 0.033));
