@@ -176,8 +176,30 @@
       z-index: 5;
     }
     .napkin-tooltip.show { transform: translate(-50%, 0) scale(1); opacity: 1; }
+    
+    /* Contact — копирование email + тултип */
+    #contact-copy { position: relative; }
+    .contact-tooltip {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      transform: translateY(-4px) scale(0.94);
+      transform-origin: 100% 0;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      background: rgba(28, 25, 22, .92);
+      color: #faf7f2;
+      font-size: 13px;
+      line-height: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: transform .18s ease, opacity .18s ease;
+      z-index: 5;
+    }
+    .contact-tooltip.show { transform: translateY(0) scale(1); opacity: 1; }
 
-    /* ---------- Intro copy ---------- */
+    /* ---------- Intro ---------- */
     .intro {
       max-width: 550px;
       font-family: var(--serif);
@@ -260,7 +282,9 @@
         <a class="animated-link" href="#products"><span>Products</span></a>
         <a class="animated-link" href="#about"><span>About</span></a>
         <a class="animated-link" href="#research"><span>Research</span></a>
-        <a class="animated-link" href="mailto:d.geradis@gmail.com"><span>Contact</span></a>
+        <a class="animated-link" href="#" id="contact-copy" aria-label="Скопировать d.geradis@gmail.com в буфер обмена">
+          <span>Contact</span>
+          <span class="contact-tooltip" role="status" aria-live="polite">email скопирован в буфер обмена</span></a>
       </nav>
     </header>
 
