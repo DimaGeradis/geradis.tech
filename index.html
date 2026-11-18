@@ -823,6 +823,37 @@
         btn.dataset.scene = 'unavailable';
       }
     })();
+    
+    // ---- Contact: клик — копировать email в буфер + тултип -----------------
+    (() => {
+      const link = document.getElementById('contact-copy');
+      const tip = link && link.querySelector('.contact-tooltip');
+      if (!link || !tip) return;
+      const EMAIL_TEXT = 'd.geradis@gmail.com';
+      let timer = 0;
+      function showTip() {
+        tip.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(() => tip.classList.remove('show'), 2400);
+      }
+      function copyFallback() {
+        const ta = document.createElement('textarea');
+        ta.value = EMAIL_TEXT;
+        ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        ta.remove();
+        if (ok) showTip();
+      }
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(EMAIL_TEXT).then(showTip).catch(copyFallback);
+        } else copyFallback();
+      });
+    })();
   </script>
 </body>
 </html>
