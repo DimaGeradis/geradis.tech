@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Geradis — an independent project. Our interest is in everything around the idea: the craft, the tools, the details underneath, and how it all fits together.">
+  <title>Geradis</title>
+  <meta property="og:title" content="Geradis">
+  <meta property="og:description" content="An independent project. Our interest is in everything around the idea: the craft, the tools, the details underneath, and how it all fits together.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Geradis">
+  <meta property="og:image" content="assets/img/ogimage.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Geradis">
+  <meta name="twitter:description" content="An independent project. Our interest is in everything around the idea: the craft, the tools, the details underneath, and how it all fits together.">
+  <meta name="twitter:image" content="assets/img/ogimage.png">
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x48">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32">
+  <link rel="icon" href="assets/img/favicon-16.png" sizes="16x16">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" sizes="180x180">
+  <link rel="preload" as="image" href="assets/img/cloth.webp">
+  <style>
+    /* ---------- Fonts (self-hosted) ---------- */
+    @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('assets/fonts/dm-sans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Libre Baskerville'; src: url('assets/fonts/libre-baskerville-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Libre Baskerville'; src: url('assets/fonts/libre-baskerville-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Caveat'; src: url('assets/fonts/caveat-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Caveat'; src: url('assets/fonts/caveat-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+    /* ---------- Theme tokens ---------- */
+    :root {
+      --ink: #1c252d;
+      --muted: #41453f;
+      --fine: #4e524b;
+      --link: #185ba2;
+      --surface: #e9e7e2;
+      --sans: 'DM Sans', -apple-system, system-ui, sans-serif;
+      --serif: 'Libre Baskerville', Georgia, serif;
+      --hand: 'Caveat', 'Segoe Script', cursive;
+    }
+    /* ---------- Base ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      min-height: 100dvh;
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--surface);
+      -webkit-font-smoothing: antialiased;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+
+    /* ---------- Wall background ---------- */
+    .wall-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background: var(--surface);
+      opacity: 0;
+      transition: opacity 2.4s ease-in-out;
+    }
+    body.ready .wall-bg { opacity: 1; }
+    .wall-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% center;
+      filter: blur(.5px);
+      animation: wall-drift 46s ease-in-out infinite alternate;
+    }
+    .wall-tint {
+      position: absolute; inset: 0;
+      background: linear-gradient(rgba(255, 252, 246, .15), rgba(255, 252, 246, .15));
+    }
+    @keyframes wall-drift {
+      from { transform: scale(1.015); }
+      to { transform: scale(1.055); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wall-bg { transition: none; opacity: 1; }
+      .wall-img { animation: none; }
+    }
+
+    /* ---------- Page frame ---------- */
+    .page {
+      display: flex; flex-direction: column; min-height: 100dvh;
+      width: min(1172px, 70%); margin: 0 auto;
+      padding-bottom: max(30px, env(safe-area-inset-bottom));
+    }
+    header { padding-top: max(32px, env(safe-area-inset-top)); }
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 24px; font-size: 14px; }
+
+    /* animated underline links */
+    .animated-link {
+      color: inherit; text-decoration: none;
+      display: inline-flex; min-height: 44px; align-items: center;
+    }
+    .animated-link span {
+      padding-bottom: 2px;
+      background-image: linear-gradient(currentColor, currentColor),
+                        linear-gradient(color-mix(in srgb, currentColor 40%, transparent), color-mix(in srgb, currentColor 40%, transparent));
+      background-size: 0% 1px, 100% 1px;
+      background-position: right bottom, right bottom;
+      background-repeat: no-repeat;
+      transition: background-size .25s ease, background-position .25s ease;
+    }
+    .animated-link:hover span, .animated-link:focus-visible span {
+      background-size: 100% 1px, 100% 1px;
+      background-position: left bottom, left bottom;
+    }
+    .animated-link:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+
+    main { margin: auto 0; padding: 96px 0; }
+
+    /* ---------- Napkin (WebGL procedural cloth) ---------- */
+    .napkin {
+      position: relative;
+      display: block;
+      width: clamp(267.3px, 21.8vw, 366.3px);
+      aspect-ratio: 1;
+      margin: 0 0 clamp(48px, 7.5vh, 80px) 12px;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      cursor: grab;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .napkin:active { cursor: grabbing; }
+    .napkin:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+    .napkin-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+      opacity: 0;
+      transition: opacity .8s ease;
+      filter: drop-shadow(-10px 16px 18px rgba(48, 42, 36, .26));
+    }
+    .napkin[data-scene="ready"] .napkin-canvas { opacity: 1; }
+    .napkin-fallback {
+      display: none;
+      position: absolute; inset: 8%;
+      background: #f7f4ec;
+      box-shadow: -10px 14px 22px rgba(48, 42, 36, .18);
+      font-family: var(--hand);
+      font-weight: 600;
+      font-size: 30px;
+      color: #241f1c;
+      place-items: center;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .napkin[data-scene="unavailable"] .napkin-fallback { display: grid; }
+    .napkin-tooltip {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 8px);
+      transform: translate(-50%, 0) scale(0.94);
+      transform-origin: 50% 0;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      background: rgba(28, 25, 22, .92);
+      color: #faf7f2;
+      font-family: var(--sans);
+      font-size: clamp(17.5px, 1.63vw, 21.9px);
+      line-height: 1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      transition: transform .18s ease, opacity .18s ease;
+      z-index: 5;
+    }
+    .napkin-tooltip.show { transform: translate(-50%, 0) scale(1); opacity: 1; }
+
+    /* ---------- Intro copy ---------- */
+    .intro {
+      max-width: 550px;
+      font-family: var(--serif);
+      font-size: 16px; line-height: 1.625; letter-spacing: -.025em;
+      color: var(--muted);
+      display: grid; gap: 16px;
+      text-wrap: pretty;
+    }
+    .new-line {
+      margin-top: 24px; max-width: 32rem;
+      font-family: var(--serif);
+      font-size: 16px; line-height: 1.625; letter-spacing: -.025em;
+      color: var(--ink);
+    }
+    .new-label { opacity: .5; }
+    .reveal-link {
+      color: var(--ink); text-decoration: none;
+      padding-bottom: 2px;
+      background-image: linear-gradient(currentColor, currentColor),
+                        linear-gradient(color-mix(in srgb, currentColor 30%, transparent), color-mix(in srgb, currentColor 30%, transparent));
+      background-size: 0% 1px, 100% 1px;
+      background-position: right bottom, right bottom;
+      background-repeat: no-repeat;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
+      transition: background-size .2s ease, background-position .2s ease;
+    }
+    .reveal-link:hover, .reveal-link:focus-visible {
+      background-size: 100% 1px, 100% 1px;
+      background-position: left bottom, left bottom;
+    }
+    .reveal-link:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+
+    /* ---------- Footer ---------- */
+    footer { font-size: 12px; color: var(--fine); }
+    .footer-line { max-width: 900px; line-height: 1.45; text-wrap: pretty; }
+    .footer-links {
+      margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center;
+      column-gap: 8px; row-gap: 4px; line-height: 1.45;
+    }
+    .social { display: flex; align-items: center; gap: 8px; }
+    .social a {
+      display: inline-flex; width: 24px; height: 24px;
+      align-items: center; justify-content: center;
+      color: inherit; transition: color .2s ease;
+    }
+    .social a:hover { color: var(--link); }
+    .social a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 3px; }
+    .social svg { width: 20px; height: 20px; }
+    .footer-links a { color: inherit; text-underline-offset: 3px; -webkit-tap-highlight-color: transparent; }
+    .footer-links a:hover { text-decoration: underline; }
+    .footer-links a:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: 3px; }
+    .sep { user-select: none; }
+
+    /* ---------- Mobile ---------- */
+    @media (max-width: 700px) {
+      .page {
+        width: auto;
+        margin-left: max(26px, env(safe-area-inset-left));
+        margin-right: max(26px, env(safe-area-inset-right));
+      }
+      main { padding: 128px 0; }
+      .napkin { width: 267.3px; margin-left: 5px; margin-bottom: 52px; }
+      .napkin-tooltip { padding: 8px 12px; }
+    }
+    @media (min-width: 640px) {
+      .intro, .new-line { font-size: 18px; }
+      footer { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wall-bg" aria-hidden="true">
+    <img class="wall-img" src="assets/img/cloth.webp" alt="">
+    <div class="wall-tint"></div>
+  </div>
+
+  <div class="page">
+    <header>
+      <nav aria-label="Main navigation">
+        <a class="animated-link" href="#products"><span>Products</span></a>
+        <a class="animated-link" href="#about"><span>About</span></a>
+        <a class="animated-link" href="#research"><span>Research</span></a>
+        <a class="animated-link" href="mailto:d.geradis@gmail.com"><span>Contact</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="sr-only">Geradis</h1>
+      <button class="napkin" id="napkin" type="button" aria-label="Geradis, handwritten on a white napkin on the table — activate to copy d.geradis@gmail.com">
+        <canvas class="napkin-canvas" aria-hidden="true"></canvas>
+        <span class="napkin-fallback" aria-hidden="true"><span>d.geradis<br>@gmail.com</span></span>
+        <span class="napkin-tooltip" role="status" aria-live="polite">email скопирован в буфер обмена</span>
+      </button>
+
+      <div class="intro">
+        <p>Ideas get the attention. Ours goes to everything around them: the craft, the tools behind the work, the small details underneath, and how it all fits together.</p>
+        <p>Handled with care and a certain stubbornness about quality, software stays simpler, and usually works better.</p>
+      </div>
+      <p class="new-line">
+        <span class="new-label">New:</span>
+        <a class="reveal-link" href="#">hello from Geradis — a first note taped to the wall</a>
+      </p>
+    </main>
+
+    <footer>
+      <p class="footer-line">
+        <span>An independent project</span><span class="sep" aria-hidden="true">&nbsp;·&nbsp;</span><span>Built with care, one detail at a time</span>
+      </p>
+      <div class="footer-links">
+        <div class="social">
+          <a href="#" aria-label="X" title="X">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M214.75,211.71l-62.6-98.38,61.77-67.95a8,8,0,0,0-11.84-10.76L143.24,99.34,102.75,35.71A8,8,0,0,0,96,32H48a8,8,0,0,0-6.75,12.3l62.6,98.37-61.77,68a8,8,0,1,0,11.84,10.76l58.84-64.72,40.49,63.63A8,8,0,0,0,160,224h48a8,8,0,0,0,6.75-12.29ZM164.39,208,62.57,48h29L193.43,208Z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z"/></svg>
+          </a>
+          <a href="#" aria-label="Discord" title="Discord">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M104,140a12,12,0,1,1-12-12A12,12,0,0,1,104,140Zm60-12a12,12,0,1,0,12,12A12,12,0,0,0,164,128Zm74.45,64.9-67,29.71a16.17,16.17,0,0,1-21.71-9.1l-8.11-22q-6.72.45-13.63.46t-13.63-.46l-8.11,22a16.18,16.18,0,0,1-21.71,9.1l-67-29.71a15.93,15.93,0,0,1-9.06-18.51L38,58A16.07,16.07,0,0,1,51,46.14l36.06-5.93a16.22,16.22,0,0,1,18.26,11.88l3.26,12.84Q118.11,64,128,64t19.4.93l3.26-12.84a16.21,16.21,0,0,1,18.26-11.88L205,46.14A16.07,16.07,0,0,1,218,58l29.53,116.38A15.93,15.93,0,0,1,238.45,192.9ZM232,178.28,202.47,62s0,0-.08,0L166.33,56a.17.17,0,0,0-.17,0l-2.83,11.14c5,.94,10,2.06,14.83,3.42A8,8,0,1,1,176,86.31a8.09,8.09,0,0,1-2.16-.3A172.25,172.25,0,0,0,128,80a172.25,172.25,0,0,0-45.84,6,8,8,0,1,1-4.32-15.4c4.82-1.36,9.78-2.48,14.82-3.42L89.83,56s0,0-.12,0h0L53.61,61.93a.17.17,0,0,0-.09,0L24,178.33,91,208a.23.23,0,0,0,.22,0L98,189.72a173.2,173.2,0,0,1-20.14-4.32A8,8,0,1,1,82.16,170,171.85,171.85,0,0,0,128,176a171.85,171.85,0,0,0,45.84-6,8,8,0,0,1,4.32,15.41A173.2,173.2,0,0,1,158,189.72L164.75,208a.22.22,0,0,0,.21,0Z"/></svg>
+          </a>
+          <a href="#" aria-label="GitHub" title="GitHub">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"/></svg>
+          </a>
+        </div>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#">Privacy</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#">Terms</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Reveal the wall scene once the page is ready.
+    window.addEventListener('load', () => document.body.classList.add('ready'));
+    setTimeout(() => document.body.classList.add('ready'), 1200); // fallback
+
+    // Hidden channel.
+    console.log(
+      '%c      ██████╗     \n' +
+      '     ██╔════╝     \n' +
+      '     ██║  ███╗    \n' +
+      '     ██║   ██║    \n' +
+      '     ╚██████╔╝    \n' +
+      '      ╚═════╝     \n' +
+      '%c\n' +
+      'GERADIS // hidden channel\n\n' +
+      '> You found the note behind the wallpaper.\n\n' +
+      'Curious about craft, tools, and details?\n' +
+      'Say hi: d.geradis@gmail.com\n' +
+      'Extra credit if you bring something you built.\n',
+      'color: #b8862b; font-family: monospace; font-size: 14px; line-height: 1;',
+      'font-family: monospace; font-size: 12px;'
+    );
+
+    // Napkin — faithful port of the unreallabs wall-note physics (Rc in scene.js):
+    // two-layer gust scheduler + bend/twist/poke damped springs + CPU cantilever
+    // vertex deformation (48x32 grid, computeVertexNormals each frame).
+    (() => {
+      const btn = document.getElementById('napkin');
+      const canvas = btn && btn.querySelector('.napkin-canvas');
+      const tip = btn && btn.querySelector('.napkin-tooltip');
+      if (!btn || !canvas || !tip) return;
+
+      const EMAIL = 'd.geradis@gmail.com';
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
+      if (!gl) { btn.dataset.scene = 'unavailable'; return; }
+
+      try {
+        // ---- shaders --------------------------------------------------------
+        const VERT = `
+          uniform mat4 uMVP;
+          uniform mat4 uModel;
+          attribute vec3 aPos;
+          attribute vec2 aUv;
+          attribute vec3 aNrm;
+          varying vec2 vUv;
+          varying vec3 vNormal;
+          varying float vHeight;
+          void main() {
+            vUv = aUv;
+            vHeight = aPos.z;
+            vec3 n = normalize(vec3(aNrm.x / 1.30, aNrm.y, aNrm.z)); // компенсация растяжения по x
+            vNormal = normalize(mat3(uModel) * n);
+            vec3 pos = aPos;
+            pos.x *= 1.30; // компенсация ракурса: салфетка квадратная
+            gl_Position = uMVP * vec4(pos, 1.0);
+          }
+        `;
+        const FRAG = `
+          precision highp float;
+          uniform sampler2D uText;
+          uniform vec3 uLight;
+          varying vec2 vUv;
+          varying vec3 vNormal;
+          varying float vHeight;
+
+          float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+          float vnoise(vec2 p) {
+            vec2 i = floor(p), f = fract(p);
+            vec2 q = f * f * (3.0 - 2.0 * f);
+            return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), q.x),
+                       mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), q.x), q.y);
+          }
+
+          void main() {
+            vec3 base = vec3(0.972, 0.966, 0.952);
+            // плотная бумага: плавные разводы волокон — сглаженный шум без сетки
+            // (высокочастотные «нити» sin(850) алиасили и выглядели как тюль)
+            base *= 0.982 + 0.020 * vnoise(vUv * 6.5) + 0.013 * vnoise(vUv * 16.0 + 37.2);
+            base -= 0.008 * vnoise(vUv * 90.0 + 11.3);
+            // подшитый край с одной строчкой
+            float ed = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
+            base *= 1.0 - 0.07 * smoothstep(0.0022, 0.0008, abs(ed - 0.033));
+            // освещение
+            vec3 N = normalize(vNormal);
+            vec3 L = normalize(uLight);
+            float diff = max(dot(N, L), 0.0);
+            float shade = 0.60 + 0.34 * diff + 0.10 * clamp(vHeight * 8.0, -0.6, 0.6);
+            vec3 col = base * shade;
+            col += vec3(0.02) * pow(max(dot(reflect(-L, N), vec3(0.0, 0.0, 1.0)), 0.0), 24.0);
+            // рукописный текст
+            vec4 ink = texture2D(uText, vUv);
+            col = mix(col, ink.rgb, ink.a);
+            gl_FragColor = vec4(col, 1.0);
+          }
+        `;
+        function compile(type, src) {
+          const s = gl.createShader(type);
+          gl.shaderSource(s, src);
+          gl.compileShader(s);
+          if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+          return s;
+        }
+        const prog = gl.createProgram();
+        gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+        gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+        gl.useProgram(prog);
+
+        // ---- геометрия: сетка 48x32, как PlaneGeometry(1,1,48,32) в оригинале --
+        const NX = 48, NY = 32;
+        const V = (NX + 1) * (NY + 1);
+        const T = new Float32Array(V * 2);   // координаты покоя
+        const UV = new Float32Array(V * 2);
+        let k = 0;
+        for (let j = 0; j <= NY; j++) {
+          for (let i = 0; i <= NX; i++) {
+            const x = i / NX - 0.5, y = 0.5 - j / NY;
+            T[k] = x; UV[k++] = x + 0.5;
+            T[k] = y; UV[k++] = y + 0.5;
+          }
+        }
+        const idx = new Uint16Array(NX * NY * 6);
+        k = 0;
+        for (let j = 0; j < NY; j++) {
+          for (let i = 0; i < NX; i++) {
+            const a = j * (NX + 1) + i, b = a + 1, c = a + NX + 1, d = c + 1;
+            idx[k++] = a; idx[k++] = c; idx[k++] = b;
+            idx[k++] = b; idx[k++] = c; idx[k++] = d;
+          }
+        }
+        // микрорельеф покоя: гладкий value-noise ±0.008 — лежащая ткань не бывает
+        // идеально плоской, но и не держит замороженных завитков (как на оригинале:
+        // покой почти плоский, вся динамика — в порывах)
+        const RZ = new Float32Array(V);
+        {
+          const hsh = (ix, iy) => { const n = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453; return n - Math.floor(n); };
+          for (let v = 0; v < V; v++) {
+            const gx = (T[v * 2] + 0.5) * 2.4, gy = (T[v * 2 + 1] + 0.5) * 2.4;
+            const ix = Math.floor(gx), iy = Math.floor(gy);
+            const fx = gx - ix, fy = gy - iy;
+            const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+            const a00 = hsh(ix, iy), a10 = hsh(ix + 1, iy), a01 = hsh(ix, iy + 1), a11 = hsh(ix + 1, iy + 1);
+            const n1 = a00 + (a10 - a00) * sx + (a01 - a00) * sy + (a00 - a10 - a01 + a11) * sx * sy;
+            const gx2 = (T[v * 2] + 0.5) * 5.3, gy2 = (T[v * 2 + 1] + 0.5) * 5.3;
+            const ix2 = Math.floor(gx2), iy2 = Math.floor(gy2);
+            const fx2 = gx2 - ix2, fy2 = gy2 - iy2;
+            const sx2 = fx2 * fx2 * (3 - 2 * fx2), sy2 = fy2 * fy2 * (3 - 2 * fy2);
+            const b00 = hsh(ix2 + 7.3, iy2 + 3.1), b10 = hsh(ix2 + 8.3, iy2 + 3.1), b01 = hsh(ix2 + 7.3, iy2 + 4.1), b11 = hsh(ix2 + 8.3, iy2 + 4.1);
+            const n2 = b00 + (b10 - b00) * sx2 + (b01 - b00) * sy2 + (b00 - b10 - b01 + b11) * sx2 * sy2;
+            RZ[v] = (n1 - 0.5) * 0.012 + (n2 - 0.5) * 0.006;
+          }
+        }
+        const dynBuf = gl.createBuffer(); // [x,y,z, nx,ny,nz] × V, обновляется каждый кадр
+        gl.bindBuffer(gl.ARRAY_BUFFER, dynBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, V * 6 * 4, gl.DYNAMIC_DRAW);
+        const uvBuf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+        gl.bufferData(gl.ARRAY_BUFFER, UV, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, idx, gl.STATIC_DRAW);
+        const aPos = gl.getAttribLocation(prog, 'aPos');
+        const aUv = gl.getAttribLocation(prog, 'aUv');
+        const aNrm = gl.getAttribLocation(prog, 'aNrm');
+        gl.bindBuffer(gl.ARRAY_BUFFER, dynBuf);
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 24, 0);
+        gl.enableVertexAttribArray(aNrm);
+        gl.vertexAttribPointer(aNrm, 3, gl.FLOAT, false, 24, 12);
+        gl.bindBuffer(gl.ARRAY_BUFFER, uvBuf);
+        gl.enableVertexAttribArray(aUv);
+        gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 8, 0);
+
+        // ---- матрицы (column-major) ------------------------------------------
+        const M = {
+          mul(a, b) {
+            const r = new Float32Array(16);
+            for (let c = 0; c < 4; c++) for (let i = 0; i < 4; i++)
+              r[c * 4 + i] = a[i] * b[c * 4] + a[4 + i] * b[c * 4 + 1] + a[8 + i] * b[c * 4 + 2] + a[12 + i] * b[c * 4 + 3];
+            return r;
+          },
+          perspective(fovY, aspect, near, far) {
+            const f = 1 / Math.tan(fovY / 2), n = 1 / (near - far);
+            return new Float32Array([f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * n, -1, 0, 0, 2 * far * near * n, 0]);
+          },
+          rotX(a) { const c = Math.cos(a), s = Math.sin(a); return new Float32Array([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1]); },
+          rotZ(a) { const c = Math.cos(a), s = Math.sin(a); return new Float32Array([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]); },
+          trans(x, y, z) { return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1]); }
+        };
+        // ракурс как на рефе: салфетка лежит на поверхности, камера под углом
+        const model = M.mul(M.rotX(-0.75), M.rotZ(-0.06));
+        const mvp = M.mul(M.perspective(22 * Math.PI / 180, 1, 0.1, 10),
+                    M.mul(M.trans(0, 0, -4.0), M.mul(M.trans(0, 0.02, 0), model)));
+
+        const U = {
+          mvp: gl.getUniformLocation(prog, 'uMVP'),
+          model: gl.getUniformLocation(prog, 'uModel'),
+          text: gl.getUniformLocation(prog, 'uText'),
+          light: gl.getUniformLocation(prog, 'uLight')
+        };
+        gl.uniformMatrix4fv(U.mvp, false, mvp);
+        gl.uniformMatrix4fv(U.model, false, model);
+        gl.uniform3f(U.light, -0.45, 0.60, 0.66);
+        gl.uniform1i(U.text, 0);
+
+        const posArr = new Float32Array(V * 6);
+        let raf = 0, lastT = 0, alarm = 0, t0 = 0;
+
+        // ---- текстура надписи: одна строка под углом, шариковая ручка ----------
+        function uploadTextTexture() {
+          const S = 1024;
+          const c = document.createElement('canvas');
+          c.width = c.height = S;
+          const x = c.getContext('2d');
+          x.clearRect(0, 0, S, S);
+          const TXT = 'd.geradis@gmail.com';
+          // размер: строка занимает ~80% ширины салфетки
+          let size = 112;
+          x.font = `600 ${size}px Caveat, cursive`;
+          size = Math.floor(size * 820 / x.measureText(TXT).width);
+          x.font = `600 ${size}px Caveat, cursive`;
+          // как на рефе: от левого верхнего угла вниз-вправо, одним росчерком
+          x.save();
+          x.translate(112, 262);
+          x.rotate(9.5 * Math.PI / 180);
+          x.textBaseline = 'middle';
+          x.textAlign = 'left';
+          // шариковая ручка: плотные чернила с холодным оттенком,
+          // два добивочных прохода дают неровное отложение по краям штриха
+          x.fillStyle = 'rgba(27, 29, 38, 0.93)';
+          x.fillText(TXT, 0, 0);
+          x.fillStyle = 'rgba(27, 29, 38, 0.30)';
+          x.fillText(TXT, 0.8, -0.7);
+          x.fillText(TXT, -0.7, 0.9);
+          x.restore();
+          // отложение чернил: зерно по штриху + редкие капли и микропропуски
+          const img = x.getImageData(0, 0, S, S), d = img.data;
+          let seed = 99;
+          const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+          for (let i = 0; i < d.length; i += 4) {
+            const a = d[i + 3];
+            if (a > 40) {
+              const f = rnd();
+              if (f < 0.012) d[i + 3] = Math.min(255, a * 1.7 + 30);      // капля
+              else if (f < 0.026) d[i + 3] = a * 0.34;                    // микропропуск
+              else d[i + 3] = a * (0.9 + rnd() * 0.2);                    // зерно нажима
+            }
+          }
+          x.putImageData(img, 0, 0);
+          const tex = gl.createTexture();
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, c);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+
+        // ---- размер ------------------------------------------------------------
+        function resize() {
+          const dpr = Math.min(2, window.devicePixelRatio || 1);
+          const w = Math.max(1, Math.round(btn.clientWidth * dpr));
+          if (canvas.width !== w) { canvas.width = w; canvas.height = w; }
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          if (btn.dataset.scene === 'ready') wake();
+        }
+        new ResizeObserver(resize).observe(btn);
+        resize();
+
+        // ---- физика: точный порт салфетки unreallabs (Rc из scene.js) ----------
+        // два слоя порывов: собственный (быстрый) + настенный (медленный, вес 0.5),
+        // пружины bend/twist/poke, подшаги до 120 Гц, cantilever-деформация на CPU
+        let seed = 143;
+        const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+        const wall = { time: 0, nextGust: 1.6, gustStart: -10, duration: 1, strength: 0, direction: 0, bend: 0, bendVel: 0, twist: 0, twistVel: 0 };
+        const own = { time: 0, nextGust: 0.8, start: -10, duration: 1, strength: 0, direction: 0, bend: 0, bendVel: 0, twist: 0, twistVel: 0 };
+        const hover = { x: 0, y: 0, tx: 0, ty: 0, amount: 0, target: 0 };
+        const poke = { x: 0, y: 0, amount: 0, target: 0, vel: 0 };
+
+        function step(dt, now) {
+          const rm = reduceMotion;
+          const rh = rm ? 1 : 1 - Math.exp(-dt * 14);
+          hover.x += (hover.tx - hover.x) * rh;
+          hover.y += (hover.ty - hover.y) * rh;
+          hover.amount += (hover.target - hover.amount) * rh;
+          if (!rm) {
+            own.time = (now - t0) / 1000; // wall-clock: будильник порыва срабатывает и после сна
+            wall.time = own.time;
+            if (own.time >= own.nextGust) {
+              own.start = own.time;
+              own.duration = 1.5 + rnd() * 0.9;
+              own.strength = 0.65 + rnd() * 0.3;
+              own.direction = rnd() * 2 - 1;
+              own.nextGust = own.time + own.duration + 2 + rnd() * 2;
+            }
+            if (wall.time >= wall.nextGust) {
+              wall.gustStart = wall.time;
+              wall.duration = 3.5 + rnd() * 2.5;
+              wall.strength = 0.25 + rnd() * 0.35;
+              wall.direction = -0.8 + rnd() * 1.2;
+              wall.nextGust = wall.time + 9 + rnd() * 8;
+            }
+          }
+          const po = Math.min(1, Math.max(0, (own.time - own.start) / own.duration));
+          const oa = rm ? 0 : own.strength * Math.sin(po * Math.PI) ** 2;
+          const pw = Math.min(1, Math.max(0, (wall.time - wall.gustStart) / wall.duration));
+          const wa = rm ? 0 : wall.strength * Math.sin(pw * Math.PI) ** 2;
+          const steps = Math.max(1, Math.ceil(dt * 120)), h = dt / steps;
+          for (let i = 0; i < steps; i++) {
+            if (!rm) {
+              own.bendVel += ((oa + wall.bend * 0.5 - own.bend) * 75 - own.bendVel * 6) * h;
+              own.bend += own.bendVel * h;
+              own.twistVel += ((oa * own.direction + wall.twist * 0.5 - own.twist) * 110 - own.twistVel * 5.5) * h;
+              own.twist += own.twistVel * h;
+              wall.bendVel += ((wa - wall.bend) * 90 - wall.bendVel * 7.5) * h;
+              wall.bend += wall.bendVel * h;
+              wall.twistVel += ((wa * wall.direction - wall.twist) * 135 - wall.twistVel * 6.5) * h;
+              wall.twist += wall.twistVel * h;
+            }
+            poke.vel += ((poke.target - poke.amount) * 200 - poke.vel * 24) * h;
+            poke.amount += poke.vel * h;
+            if (poke.amount < 0) { poke.amount = 0; poke.vel = 0; }
+          }
+          if (poke.target === 0 && poke.amount < 0.001 && Math.abs(poke.vel) < 0.01) { poke.amount = 0; poke.vel = 0; }
+        }
+
+        // деформация: кантилевер нижней половины + заворот верхних углов +
+        // заворот левой кромки + статичный рельеф покоя — формулы оригинала 1:1
+        function deform() {
+          const hA = hover.amount;
+          const yA = Math.min(poke.amount, 1);
+          const wTop = hA * (0.35 + 0.65 * (0.5 - hover.y));   // вес изгиба от курсора
+          const wTwist = hA * (0.5 + hover.y);                 // вес заворота углов
+          const pTop = yA * (0.35 + 0.65 * (0.5 - poke.y));
+          const pTwist = yA * (0.5 + poke.y);
+          const lx = hover.x * 2;
+          const w = poke.x * 2;
+          const E = 1 - Math.max(hA, yA) * 0.6;                // прижал рукой — ветер не поднимает
+          const D = own.bend * E;
+          const O = own.twist * E;
+          for (let v = 0; v < V; v++) {
+            const tx = T[v * 2], ty = T[v * 2 + 1];
+            const r = Math.pow(0.5 - ty, 1.7);                 // спад к нижней кромке
+            const i2 = Math.max(0, -ty);                       // свободная длина от середины вниз
+            const f = tx < 0 ? -1 : 1;
+            // основная дуга: в покое ткань лежит почти плоско (0.012), порывы поднимают
+            // нижнюю половину кантилевером (кривизна до ~2.5), твист наклоняет фронт
+            const a = Math.max(0.008, 0.012 + wTop * 1.04 * (1 + lx * tx * 1.6)
+              + pTop * 1.8 * (1 + w * tx * 1.6) + D * 2.3 + O * tx * 0.9);
+            const c = a * i2;
+            const u = i2 - Math.sin(c) / a;                    // укорочение хорды (подъём кромки)
+            const d = (1 - Math.cos(c)) / a;                   // вылет из плоскости
+            // заворот верхних углов: зона спит в покое, оживает в порыве и под курсором
+            const p = Math.max(0, (Math.abs(tx) - 0.095) * 0.8 + (ty - 0.5) * 0.6);
+            const m2 = (f < 0 ? 0.16 : 0.13) + D * 0.65 - f * O * 0.45
+              + wTwist * 2.2 * Math.max(0, (f * lx - 0.2) / 0.8)
+              + pTwist * 3.2 * Math.max(0, (f * w - 0.2) / 0.8);
+            const h2 = m2 * p;
+            const g = p - Math.sin(h2) / m2;
+            const b2 = (1 - Math.cos(h2)) / m2;
+            // заворот левой кромки: в покое едва заметен, в порыве и при нажатии растёт
+            const x3 = Math.max(0, -tx - 0.12);
+            const E3 = 0.22 + D * 0.65 + O * 0.3 + yA * Math.max(0, -w) * 0.45;
+            const k3 = E3 * x3;
+            const A3 = x3 - Math.sin(k3) / E3;
+            const j3 = (1 - Math.cos(k3)) / E3;
+            posArr[v * 6] = tx - f * g * 0.8 + A3;
+            posArr[v * 6 + 1] = ty + r * tx * tx * 0.08 + u - g * 0.6;
+            posArr[v * 6 + 2] = d + b2 + j3 + RZ[v];
+          }
+          // нормали по деформированной сетке
+          const W1 = NX + 1;
+          for (let j = 0; j <= NY; j++) {
+            for (let i = 0; i <= NX; i++) {
+              const v = j * W1 + i;
+              const r = (i < NX ? v + 1 : v) * 6, l = (i > 0 ? v - 1 : v) * 6;
+              const u = (j > 0 ? v - W1 : v) * 6, d = (j < NY ? v + W1 : v) * 6;
+              const tx = posArr[r] - posArr[l], ty = posArr[r + 1] - posArr[l + 1], tz = posArr[r + 2] - posArr[l + 2];
+              const ux = posArr[u] - posArr[d], uy = posArr[u + 1] - posArr[d + 1], uz = posArr[u + 2] - posArr[d + 2];
+              let nx = ty * uz - tz * uy, ny = tz * ux - tx * uz, nz = tx * uy - ty * ux;
+              const il = 1 / (Math.hypot(nx, ny, nz) + 1e-9);
+              posArr[v * 6 + 3] = nx * il; posArr[v * 6 + 4] = ny * il; posArr[v * 6 + 5] = nz * il;
+            }
+          }
+        }
+
+        function draw() {
+          deform();
+          gl.bindBuffer(gl.ARRAY_BUFFER, dynBuf);
+          gl.bufferSubData(gl.ARRAY_BUFFER, 0, posArr);
+          gl.clearColor(0, 0, 0, 0);
+          gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
+        }
+
+        function frame(now) {
+          if (!t0) { raf = requestAnimationFrame(frame); return; } // ждём ready()
+          const dt = Math.min(0.05, Math.max(0.001, (now - lastT) / 1000));
+          lastT = now;
+          step(dt, now);
+          draw();
+          if (settled()) { sleep(); return; }
+          raf = requestAnimationFrame(frame);
+        }
+        // покой: оба слоя порывов и пружины замерли, курсор ушёл
+        function settled() {
+          const hoverQuiet = Math.abs(hover.amount - hover.target) < 0.001
+            && (hover.target === 0
+              ? hover.amount < 0.001
+              : (hover.x - hover.tx) * (hover.x - hover.tx) + (hover.y - hover.ty) * (hover.y - hover.ty) < 1e-5);
+          return (own.time >= own.start + own.duration || reduceMotion)
+            && wall.time >= wall.gustStart + wall.duration
+            && Math.abs(own.bendVel) < 0.008 && Math.abs(own.twistVel) < 0.008
+            && Math.abs(wall.bendVel) < 0.008 && Math.abs(wall.twistVel) < 0.008
+            && poke.amount < 0.001 && Math.abs(poke.vel) < 0.01
+            && hoverQuiet;
+        }
+        function sleep() {
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          if (reduceMotion) return;
+          const wait = Math.min(own.nextGust, wall.nextGust) - own.time;
+          if (wait < 0.35) { wake(); return; } // до порыва недолго — не засыпаем
+          alarm = setTimeout(wake, Math.max(150, (wait - 0.12) * 1000));
+        }
+        function wake() {
+          if (alarm) { clearTimeout(alarm); alarm = 0; }
+          if (!raf) { lastT = performance.now(); raf = requestAnimationFrame(frame); }
+        }
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+
+        // ---- указатель ---------------------------------------------------------
+        function toPlane(e, dst) {
+          const r = canvas.getBoundingClientRect();
+          const fx = (e.clientX - r.left) / r.width;
+          const fy = (e.clientY - r.top) / r.height;
+          // обратная проекция камеры (fov 22°, наклон -0.75 rad) в плоскость ткани
+          dst.x = Math.max(-0.5, Math.min(0.5, (fx - 0.5) * 1.196));
+          const ndc = 1 - 2 * fy;
+          dst.y = Math.max(-0.5, Math.min(0.5, (4 * ndc) / (3.764 - 0.682 * ndc)));
+        }
+        btn.addEventListener('pointermove', (e) => {
+          if (reduceMotion || e.pointerType === 'touch') return;
+          toPlane(e, hover);
+          if (hover.amount < 0.001) { hover.x = hover.tx; hover.y = hover.ty; }
+          hover.target = 1;
+          wake();
+        }, { passive: true });
+        btn.addEventListener('pointerdown', (e) => {
+          if (reduceMotion) return;
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          if (!e.isPrimary) return;
+          toPlane(e, poke);
+          poke.target = 0.65;
+          poke.vel = Math.min(24, Math.max(0, poke.vel) + 22);
+          wake();
+        }, { passive: true });
+        function releasePoke() { if (poke.target !== 0) { poke.target = 0; wake(); } }
+        btn.addEventListener('pointerup', releasePoke, { passive: true });
+        btn.addEventListener('pointercancel', releasePoke, { passive: true });
+        btn.addEventListener('pointerleave', () => { hover.target = 0; }, { passive: true });
+        window.addEventListener('blur', () => { hover.target = 0; releasePoke(); });
+        window.addEventListener('scroll', () => { hover.target = 0; }, { passive: true });
+
+        // ---- клик: копировать email + тултип -----------------------------------
+        let tipTimer = 0;
+        function showTip() {
+          tip.style.marginLeft = '';
+          tip.classList.add('show');
+          const w = tip.offsetWidth;
+          const br = btn.getBoundingClientRect();
+          const vl = br.left + br.width / 2 - w / 2;
+          const shift = Math.max(0, 8 - vl) - Math.max(0, vl + w - innerWidth + 8);
+          if (shift) tip.style.marginLeft = shift + 'px';
+          clearTimeout(tipTimer);
+          tipTimer = setTimeout(() => tip.classList.remove('show'), 2400);
+        }
+        function copyFallback() {
+          const ta = document.createElement('textarea');
+          ta.value = EMAIL;
+          ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+          document.body.appendChild(ta);
+          ta.focus(); ta.select();
+          let ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) {}
+          ta.remove();
+          if (ok) showTip();
+        }
+        btn.addEventListener('click', () => {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(EMAIL).then(showTip).catch(copyFallback);
+          } else copyFallback();
+        });
+
+        // ---- старт: ждём шрифт надписи, затем рендер ---------------------------
+        function ready() {
+          uploadTextTexture();
+          btn.dataset.scene = 'ready';
+          t0 = performance.now();
+          own.nextGust = 0.8;
+          wall.nextGust = 1.6;
+          wake();
+        }
+        if (document.fonts && document.fonts.load) {
+          Promise.all([document.fonts.load('600 165px Caveat'), document.fonts.load('600 130px Caveat')])
+            .then(ready, ready);
+          setTimeout(() => { if (!btn.dataset.scene) ready(); }, 2000);
+        } else ready();
+      } catch (e) {
+        btn.dataset.scene = 'unavailable';
+      }
+    })();
+  </script>
+</body>
+</html>
