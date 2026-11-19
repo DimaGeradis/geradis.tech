@@ -209,6 +209,8 @@
       display: grid; gap: 16px;
       text-wrap: pretty;
     }
+    /* .lead-off — верхний абзац скрыт, но его место зарезервировано: нижний абзац не сдвигается */
+    .intro > .lead-off { visibility: hidden; }
     .new-line {
       margin-top: 24px; max-width: 32rem;
       font-family: var(--serif);
