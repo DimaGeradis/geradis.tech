@@ -234,11 +234,11 @@
     .sep { user-select: none; }
 
     /* ---------- Mobile ----------
-       Card 1 goes edge-to-edge (full screen width). Below it: the paragraph
+              Card 1 spans the full content width — inside the page margins, on the
+       same lines the title and the menu rest against. Below it: the paragraph
        on the left, cards 2/3 on the right, top-aligned with the paragraph.
-       Card 3 is only a sliver: it spans from its gap to the content edge —
-       the same line the menu rests against — so nothing overflows the
-       viewport and the page never pans sideways. */
+       Card 3 is only a sliver: it spans from its gap to the content edge,
+       so nothing overflows the viewport and the page never pans sideways. */
     @media (max-width: 700px) {
       .page {
         width: auto;
@@ -255,11 +255,7 @@
       }
       .gp-title { grid-area: 1 / 1 / 2 / 4; margin-bottom: 0; }
       .strip { display: contents; }
-      .card:nth-child(1) {
-        grid-area: 2 / 1 / 3 / 4;
-        width: calc(100% + max(26px, env(safe-area-inset-left)) + max(26px, env(safe-area-inset-right)));
-        margin-left: calc(-1 * max(26px, env(safe-area-inset-left)));
-      }
+      .card:nth-child(1) { grid-area: 2 / 1 / 3 / 4; width: 100%; margin-left: 0; }
       .intro { grid-area: 3 / 1 / 4 / 2; margin-top: 0; }
       .card:nth-child(2) { grid-area: 3 / 2 / 4 / 3; width: 26vw; margin-left: 0; }
       .card:nth-child(3) { grid-area: 3 / 3 / 4 / 4; width: 5.5vw; height: 26vw; margin-left: 0; }
