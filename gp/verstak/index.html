@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="gp/verstak — a Geradis workbench page: layout experiments and upcoming cases.">
+  <title>gp/verstak — Geradis</title>
+  <meta property="og:title" content="gp/verstak — Geradis">
+  <meta property="og:description" content="A Geradis workbench page: layout experiments and upcoming cases.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Geradis">
+  <meta property="og:image" content="../../assets/img/ogimage.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="gp/verstak — Geradis">
+  <meta name="twitter:description" content="A Geradis workbench page: layout experiments and upcoming cases.">
+  <meta name="twitter:image" content="../../assets/img/ogimage.png">
+  <link rel="icon" href="../../favicon.ico" sizes="16x16 32x48">
+  <link rel="icon" href="../../assets/img/favicon-32.png" sizes="32x32">
+  <link rel="icon" href="../../assets/img/favicon-16.png" sizes="16x16">
+  <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png" sizes="180x180">
+  <link rel="preload" as="image" href="../../assets/img/cloth.webp">
+  <style>
+    /* ---------- Fonts (self-hosted) ---------- */
+    @font-face { font-family: 'DM Sans'; src: url('../../assets/fonts/dm-sans-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('../../assets/fonts/dm-sans-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('../../assets/fonts/dm-sans-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('../../assets/fonts/dm-sans-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Libre Baskerville'; src: url('../../assets/fonts/libre-baskerville-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Libre Baskerville'; src: url('../../assets/fonts/libre-baskerville-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Caveat'; src: url('../../assets/fonts/caveat-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Caveat'; src: url('../../assets/fonts/caveat-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+    /* ---------- Theme tokens ---------- */
+    :root {
+      --ink: #1c252d;
+      --muted: #41453f;
+      --fine: #4e524b;
+      --link: #185ba2;
+      --surface: #e9e7e2;
+      --sans: 'DM Sans', -apple-system, system-ui, sans-serif;
+      --serif: 'Libre Baskerville', Georgia, serif;
+      --hand: 'Caveat', 'Segoe Script', cursive;
+    }
+    /* ---------- Base ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; overflow-x: hidden; overflow-x: clip; }
+    body {
+      min-height: 100dvh;
+      font-family: var(--sans);
+      color: var(--ink);
+      background: var(--surface);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Wall background ---------- */
+    .wall-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background: var(--surface);
+      opacity: 0;
+      transition: opacity 2.4s ease-in-out;
+    }
+    body.ready .wall-bg { opacity: 1; }
+    .wall-img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: 50% center;
+      filter: blur(.5px);
+      animation: wall-drift 46s ease-in-out infinite alternate;
+    }
+    .wall-tint {
+      position: absolute; inset: 0;
+      background: linear-gradient(rgba(255, 252, 246, .15), rgba(255, 252, 246, .15));
+    }
+    @keyframes wall-drift {
+      from { transform: scale(1.015); }
+      to { transform: scale(1.055); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wall-bg { transition: none; opacity: 1; }
+      .wall-img { animation: none; }
+    }
+
+    /* ---------- Page frame ---------- */
+    .page {
+      display: flex; flex-direction: column; min-height: 100dvh;
+      width: min(1172px, 70%); margin: 0 auto;
+      padding-bottom: max(30px, env(safe-area-inset-bottom));
+    }
+    header { padding-top: max(32px, env(safe-area-inset-top)); }
+    nav { display: flex; justify-content: flex-end; align-items: center; gap: 24px; font-size: 14px; }
+
+    /* animated underline links */
+    .animated-link {
+      color: inherit; text-decoration: none;
+      display: inline-flex; min-height: 44px; align-items: center;
+    }
+    .animated-link > span:first-child {
+      padding-bottom: 2px;
+      background-image: linear-gradient(currentColor, currentColor),
+                        linear-gradient(color-mix(in srgb, currentColor 30%, transparent), color-mix(in srgb, currentColor 30%, transparent));
+      background-size: 0% 1px, 100% 1px;
+      background-position: right bottom, right bottom;
+      background-repeat: no-repeat;
+      transition: background-size .25s ease, background-position .25s ease;
+    }
+    .animated-link:hover > span:first-child, .animated-link:focus-visible > span:first-child {
+      background-size: 100% 1px, 100% 1px;
+      background-position: left bottom, left bottom;
+    }
+    .animated-link:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+
+    /* ---------- Contact tooltip ---------- */
+    #contact-copy { position: relative; }
+    .contact-tooltip {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      transform: translateY(-4px) scale(0.94);
+      transform-origin: 100% 0;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      background: rgba(28, 25, 22, .92);
+      color: #faf7f2;
+      font-family: -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1;
+      padding: 5px 8px;
+      border-radius: 4px;
+      transition: transform .18s ease, opacity .18s ease;
+      z-index: 5;
+    }
+    .contact-tooltip.show { transform: translateY(0) scale(1); opacity: 1; }
+
+    /* ---------- Workbench title ---------- */
+    main { padding: 26px 0 40px; }
+    .gp-title {
+      font-family: var(--sans);
+      font-size: 14px; font-weight: 500; line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    /* ---------- Image blocks ----------
+       Row clipped at the right content edge — the same line the menu
+       rests against. Proportions from the ref, % of the content width:
+       card1 47.5% | gap 7.5% | card2 33.9% | gap 3.9% | card3 33.9% (clipped). */
+    .strip {
+      display: flex; align-items: flex-start;
+      overflow: hidden;
+    }
+    .card {
+      flex: 0 0 auto;
+      aspect-ratio: 1;
+      background: #f1f2f4;
+      display: grid; place-items: center;
+      opacity: 0;
+      animation: card-in .7s ease .1s forwards;
+    }
+    .card:nth-child(2) { animation-delay: .22s; }
+    .card:nth-child(3) { animation-delay: .34s; }
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card { animation: none; opacity: 1; }
+    }
+    .card:nth-child(1) { width: 47.5%; }
+    .card:nth-child(2) { width: 33.9%; margin-left: 7.5%; }
+    .card:nth-child(3) { width: 33.9%; margin-left: 3.9%; }
+    .ph {
+      width: 75%; height: auto; display: block;
+      color: #949ca4;
+      transition: transform .3s ease, color .3s ease;
+    }
+    .card:hover { background: #f4f5f7; }
+    .card:hover .ph { transform: translateY(-3px); color: #828b94; }
+
+    /* ---------- Intro copy ---------- */
+    .intro {
+      max-width: 550px;
+      margin-top: 8px;
+      font-family: var(--serif);
+      font-size: 16px; line-height: 1.625; letter-spacing: -.025em;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+    .new-line {
+      margin-top: 12px; max-width: 32rem;
+      font-family: var(--serif);
+      font-size: 16px; line-height: 1.625; letter-spacing: -.025em;
+      color: var(--ink);
+    }
+    .new-label { opacity: .5; }
+    .reveal-link {
+      color: var(--ink); text-decoration: none;
+      padding-bottom: 2px;
+      background-image: linear-gradient(currentColor, currentColor),
+                        linear-gradient(color-mix(in srgb, currentColor 30%, transparent), color-mix(in srgb, currentColor 30%, transparent));
+      background-size: 0% 1px, 100% 1px;
+      background-position: right bottom, right bottom;
+      background-repeat: no-repeat;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
+      transition: background-size .2s ease, background-position .2s ease;
+    }
+    .reveal-link:hover, .reveal-link:focus-visible {
+      background-size: 100% 1px, 100% 1px;
+      background-position: left bottom, left bottom;
+    }
+    .reveal-link:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
+
+    /* ---------- Footer ---------- */
+    footer { margin-top: auto; font-size: 12px; color: var(--fine); }
+    .footer-line { max-width: 900px; line-height: 1.45; text-wrap: pretty; }
+    .footer-links {
+      margin-top: 8px; display: flex; flex-wrap: wrap; align-items: center;
+      column-gap: 9px; row-gap: 4px; line-height: 1.45;
+    }
+    .social { display: flex; align-items: center; gap: 8px; }
+    .social a {
+      display: inline-flex; width: 24px; height: 24px;
+      align-items: center; justify-content: center;
+      color: inherit; transition: color .2s ease;
+    }
+    .social a:hover { color: var(--link); }
+    .social a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 3px; }
+    .social svg { width: 20px; height: 20px; }
+    .footer-links a { color: inherit; text-underline-offset: 3px; -webkit-tap-highlight-color: transparent; }
+    .footer-links a:hover { text-decoration: underline; }
+    .footer-links a:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; border-radius: 3px; }
+    .sep { user-select: none; }
+
+    /* ---------- Mobile ----------
+       Card 1 goes edge-to-edge (full screen width). Below it: the paragraph
+       on the left, cards 2/3 on the right, top-aligned with the paragraph.
+       Card 3 is only a sliver: it spans from its gap to the content edge —
+       the same line the menu rests against — so nothing overflows the
+       viewport and the page never pans sideways. */
+    @media (max-width: 700px) {
+      .page {
+        width: auto;
+        margin-left: max(26px, env(safe-area-inset-left));
+        margin-right: max(26px, env(safe-area-inset-right));
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr 26vw 5.5vw;
+        column-gap: 9px;
+        row-gap: 10px;
+        align-items: start;
+        padding: 20px 0 32px;
+      }
+      .gp-title { grid-area: 1 / 1 / 2 / 4; margin-bottom: 0; }
+      .strip { display: contents; }
+      .card:nth-child(1) {
+        grid-area: 2 / 1 / 3 / 4;
+        width: calc(100% + max(26px, env(safe-area-inset-left)) + max(26px, env(safe-area-inset-right)));
+        margin-left: calc(-1 * max(26px, env(safe-area-inset-left)));
+      }
+      .intro { grid-area: 3 / 1 / 4 / 2; margin-top: 0; }
+      .card:nth-child(2) { grid-area: 3 / 2 / 4 / 3; width: 26vw; margin-left: 0; }
+      .card:nth-child(3) { grid-area: 3 / 3 / 4 / 4; width: 5.5vw; height: 26vw; margin-left: 0; }
+      .card:nth-child(3) .ph { display: none; }
+      .new-line { grid-area: 4 / 1 / 5 / 4; margin-top: 0; }
+    }
+    /*вставить реальные изображения: 
+    внутри каждой .card заменить <svg class="ph">…</svg> на <img src="…" alt="…"> — карточка останется квадратной, 
+    картинку можно вписать через object-fit: cover.*/
+    @media (min-width: 640px) {
+      .intro, .new-line { font-size: 18px; }
+      footer { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wall-bg" aria-hidden="true">
+    <img class="wall-img" src="../../assets/img/cloth.webp" alt="">
+    <div class="wall-tint"></div>
+  </div>
+
+  <div class="page">
+    <header>
+      <nav aria-label="Main navigation">
+        <a class="animated-link" href="#products"><span>Products&amp;Cases</span></a>
+        <a class="animated-link" href="#about"><span>About</span></a>
+        <a class="animated-link" href="#" id="contact-copy" aria-label="Скопировать d.geradis@gmail.com в буфер обмена"><span>Contact</span><span class="contact-tooltip" role="status" aria-live="polite">email скопирован в буфер обмена</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <h1 class="gp-title">gp/verstak</h1>
+
+      <div class="strip">
+        <div class="card" role="img" aria-label="Плейсхолдер — место для изображения 1">
+          <svg class="ph" viewBox="0 0 148 100" aria-hidden="true" focusable="false">
+            <rect x="4.5" y="4.5" width="139" height="91" rx="9" fill="none" stroke="currentColor" stroke-width="9"/>
+            <path d="M14 86.5 L55 26 L96 86.5 Z" fill="currentColor"/>
+            <path d="M72 86.5 L100 44 L128 86.5 Z" fill="currentColor"/>
+            <circle cx="112" cy="25" r="10" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="card" role="img" aria-label="Плейсхолдер — место для изображения 2">
+          <svg class="ph" viewBox="0 0 148 100" aria-hidden="true" focusable="false">
+            <rect x="4.5" y="4.5" width="139" height="91" rx="9" fill="none" stroke="currentColor" stroke-width="9"/>
+            <path d="M14 86.5 L55 26 L96 86.5 Z" fill="currentColor"/>
+            <path d="M72 86.5 L100 44 L128 86.5 Z" fill="currentColor"/>
+            <circle cx="112" cy="25" r="10" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="card" role="img" aria-label="Плейсхолдер — место для изображения 3">
+          <svg class="ph" viewBox="0 0 148 100" aria-hidden="true" focusable="false">
+            <rect x="4.5" y="4.5" width="139" height="91" rx="9" fill="none" stroke="currentColor" stroke-width="9"/>
+            <path d="M14 86.5 L55 26 L96 86.5 Z" fill="currentColor"/>
+            <path d="M72 86.5 L100 44 L128 86.5 Z" fill="currentColor"/>
+            <circle cx="112" cy="25" r="10" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="intro">
+        <p>Handled with care and a certain stubbornness about quality, software stays simpler, and usually works better.</p>
+      </div>
+      <p class="new-line">
+        <span class="new-label">New:</span>
+        <a class="reveal-link" href="#">hello from Geradis — a first note taped to the wall</a>
+      </p>
+    </main>
+
+    <footer>
+      <p class="footer-line">
+        <span>An independent project</span><span class="sep" aria-hidden="true">&nbsp;·&nbsp;</span><span>Built with care, one detail at a time</span>
+      </p>
+      <div class="footer-links">
+        <div class="social">
+          <a href="#" aria-label="LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z"/></svg>
+          </a>
+          <a href="#" aria-label="GitHub" title="GitHub">
+            <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" focusable="false"><path d="M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8.09,8.09,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z"/></svg>
+          </a>
+        </div>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#">Privacy</a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#">Terms</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Reveal the wall scene once the page is ready.
+    window.addEventListener('load', () => document.body.classList.add('ready'));
+    setTimeout(() => document.body.classList.add('ready'), 1200); // fallback
+
+    // Hidden channel.
+    console.log(
+      '%c      ██████╗     \n' +
+      '     ██╔════╝     \n' +
+      '     ██║  ███╗    \n' +
+      '     ██║   ██║    \n' +
+      '     ╚██████╔╝    \n' +
+      '      ╚═════╝     \n' +
+      '%c\n' +
+      'GERADIS // hidden channel\n\n' +
+      '> You found the note behind the wallpaper.\n\n' +
+      'Curious about craft, tools, and details?\n' +
+      'Say hi: d.geradis@gmail.com\n' +
+      'Extra credit if you bring something you built.\n',
+      'color: #b8862b; font-family: monospace; font-size: 14px; line-height: 1;',
+      'font-family: monospace; font-size: 12px;'
+    );
+
+    // ---- Contact: клик — копировать email в буфер + тултип -----------------
+    (() => {
+      const link = document.getElementById('contact-copy');
+      const tip = link && link.querySelector('.contact-tooltip');
+      if (!link || !tip) return;
+      const EMAIL_TEXT = 'd.geradis@gmail.com';
+      let timer = 0;
+      function showTip() {
+        tip.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(() => tip.classList.remove('show'), 2400);
+      }
+      function copyFallback() {
+        const ta = document.createElement('textarea');
+        ta.value = EMAIL_TEXT;
+        ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        ta.remove();
+        if (ok) showTip();
+      }
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(EMAIL_TEXT).then(showTip).catch(copyFallback);
+        } else copyFallback();
+      });
+    })();
+  </script>
+</body>
+</html>
