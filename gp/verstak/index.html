@@ -219,6 +219,8 @@
         margin-left: max(26px, env(safe-area-inset-left));
         margin-right: max(26px, env(safe-area-inset-right));
       }
+      nav { gap: 12px; font-size: 13px; }
+      .animated-link > span:first-child { white-space: nowrap; }
       main {
         display: grid;
         grid-template-columns: 1fr 26vw 5.5vw;
@@ -255,7 +257,8 @@
   <div class="page">
     <header>
       <nav aria-label="Main navigation">
-        <a class="animated-link" href="#products"><span>Products&amp;Cases</span></a>
+        <a class="animated-link" href="../../"><span>Home page</span></a>
+        <a class="animated-link" href="#products"><span>Products</span></a>
         <a class="animated-link" href="#about"><span>About</span></a>
         <a class="animated-link" href="#" id="contact-copy" aria-label="Скопировать d.geradis@gmail.com в буфер обмена"><span>Contact</span><span class="contact-tooltip" role="status" aria-live="polite">email скопирован в буфер обмена</span></a>
       </nav>
