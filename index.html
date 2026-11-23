@@ -134,7 +134,7 @@
     .napkin-fallback {
       display: none;
       position: absolute; inset: 8%;
-      background: #f7f4ec;
+      background: #fcfcfd;
       box-shadow: -10px 14px 22px rgba(48, 42, 36, .18);
       font-family: var(--hand);
       font-weight: 600;
@@ -390,7 +390,7 @@
           }
 
           void main() {
-            vec3 base = vec3(0.972, 0.966, 0.952);
+            vec3 base = vec3(0.988, 0.988, 0.992);
             // плотная бумага: плавные разводы волокон — сглаженный шум без сетки
             // (высокочастотные «нити» sin(850) алиасили и выглядели как тюль)
             base *= 0.982 + 0.020 * vnoise(vUv * 6.5) + 0.013 * vnoise(vUv * 16.0 + 37.2);
