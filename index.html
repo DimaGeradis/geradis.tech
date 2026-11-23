@@ -250,6 +250,8 @@
         margin-left: max(26px, env(safe-area-inset-left));
         margin-right: max(26px, env(safe-area-inset-right));
       }
+      nav { gap: 12px; font-size: 13px; }
+      .animated-link > span:first-child { white-space: nowrap; }
       main { padding: 128px 0; }
       .napkin { width: 267.3px; margin-left: 5px; margin-bottom: 52px; }
     }
@@ -268,7 +270,8 @@
   <div class="page">
     <header>
       <nav aria-label="Main navigation">
-        <a class="animated-link" href="#products"><span>Products&amp;Cases</span></a>
+        <a class="animated-link" href="index.html"><span>Home page</span></a>
+        <a class="animated-link" href="#products"><span>Products</span></a>
         <a class="animated-link" href="#about"><span>About</span></a>
         <a class="animated-link" href="#" id="contact-copy" aria-label="Скопировать d.geradis@gmail.com в буфер обмена">
           <span>Contact</span>
